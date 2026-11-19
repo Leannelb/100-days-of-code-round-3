@@ -1,113 +1,67 @@
 // 1. Sort Numbers
-// Selection Sort Solution (not fast)
-// for of - need to then get the index
-// Select one item at a time. With long arrays it takes time
-// due to the double loop
-// O(n2)
-
+// Selection sort: repeatedly remove the smallest remaining value.
+// Time: O(n²); Space: O(n) because the input is not mutated.
 function sortNumbers(numbers) {
-  if (!numbers || numbers.length == 0) {
+  if (!numbers || numbers.length === 0) {
     return [];
   }
-  // for in - index
-  let remaining = [...numbers];
-  let sorted = [];
+
+  const remaining = [...numbers];
+  const sorted = [];
 
   while (remaining.length > 0) {
-    let smallestNum = remaining[0];
-
-    for (let n of remaining) {
-      if (n < smallestNum) {
-        smallestNum = n;
-      }
-    }
-    sorted.push(smallestNum);
-    let index = remaining.indexOf(smallestNum);
-    remaining.splice(index, 1);
-  }
-  return sorted;
-}
-
-// console.log(sortNumbers([]));
-// console.log(sortNumbers());
-// console.log(sortNumbers([8, 3, 12, 1, 5]));
-// console.log(sortNumbers([10, -2, 2, 10]));
-
-// 1. Sort Numbers
-// Selection Sort Solution (not fast) - ranked LOW as a solution.
-// always O(n2)
-// for in - you will have the index
-
-function sortNumbers2(numbers) {
-  if (!numbers || numbers.length == 0) {
-    return [];
-  }
-  let array1 = [...numbers];
-  let sorted = [];
-
-  while (array1.length > 0) {
     let smallestIndex = 0;
 
-    for (let i in array1) {
-      if (array1[i] < array1[smallestIndex]) {
+    for (let i = 1; i < remaining.length; i++) {
+      if (remaining[i] < remaining[smallestIndex]) {
         smallestIndex = i;
       }
     }
-    sorted.push(array1[smallestIndex]);
-    array1.splice(smallestIndex, 1);
+
+    sorted.push(remaining[smallestIndex]);
+    remaining.splice(smallestIndex, 1);
   }
+
   return sorted;
 }
 
-// console.log(sortNumbers2([]));
-// console.log(sortNumbers2());
-// console.log(sortNumbers2([10, -2, 2, 10]));
-
-/* Built in sort method.
-  selectionSort
-  mergeSort O(logN)
-  inserstionSort
-*/
-
-// Merge Sort
-// Divide and conquer approach
-
+// Merge sort: divide the array, sort each half, then merge in order.
+// Time: O(n log n); Space: O(n).
 function mergeSort(numbers) {
-  // if theres only 1 item, you don't need to split - its already organised
-  // always put the null check / last case first to stop unneccessary looping.
-  // edge cases / best case (fastest) goes first
-  if (numbers.length <= 1) {
-    return numbers;
+  if (!numbers || numbers.length <= 1) {
+    return numbers ? [...numbers] : [];
   }
-  let middleIndex = Math.floor(numbers.length / 2);
-  // it could be a decimal, we want to drop the decimal.
-  // Math.floor() always rounds down.
-  // we use a recursive function to keep splitting until array <= 1
-  let leftArray = mergeSort(numbers.slice(0, middleIndex));
-  let rightArray = mergeSort(numbers.slice(middleIndex));
-  //console.log(leftArray, rightArray);
 
-  let mergedArray = [];
-  let i = 0;
-  let j = 0;
+  const middleIndex = Math.floor(numbers.length / 2);
+  const leftArray = mergeSort(numbers.slice(0, middleIndex));
+  const rightArray = mergeSort(numbers.slice(middleIndex));
+  const mergedArray = [];
 
-  while (i < leftArray.length && j < rightArray.length) {
-    if (leftArray[i] <= rightArray[j]) {
-      mergedArray.push(leftArray[i]);
-      i++;
+  let leftIndex = 0;
+  let rightIndex = 0;
+
+  while (leftIndex < leftArray.length && rightIndex < rightArray.length) {
+    if (leftArray[leftIndex] <= rightArray[rightIndex]) {
+      mergedArray.push(leftArray[leftIndex]);
+      leftIndex++;
     } else {
-      mergedArray.push(rightArray[j]);
-      j++;
+      mergedArray.push(rightArray[rightIndex]);
+      rightIndex++;
     }
   }
-  while (i < leftArray.length) {
-    mergedArray.push(leftArray[i]);
+
+  while (leftIndex < leftArray.length) {
+    mergedArray.push(leftArray[leftIndex]);
+    leftIndex++;
   }
-  while (j < rightArray.lenght) {
-    mergedArray.push(rightArray[j]);
+
+  while (rightIndex < rightArray.length) {
+    mergedArray.push(rightArray[rightIndex]);
+    rightIndex++;
   }
-  console.log(mergedArray);
+
   return mergedArray;
 }
 
-console.log(mergeSort([10, 9, 8, 7, 6, 5, 4, 3, 2, 1]));
+console.log('sortNumbers:', sortNumbers([10, -2, 2, 10]));
+console.log('mergeSort:', mergeSort([10, 9, 8, 7, 6, 5, 4, 3, 2, 1]));
